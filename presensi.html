@@ -1,0 +1,556 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presensi Staff - PT Tirta Waluya</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+        
+        :root {
+            --brand-blue: #00AEEF;
+            --brand-green: #8CC63F;
+            --brand-gradient: linear-gradient(135deg, #00AEEF 0%, #8CC63F 100%);
+        }
+
+        body { 
+            font-family: 'Plus Jakarta Sans', sans-serif; 
+            background-color: #f0f9ff;
+            color: #334155;
+        }
+
+        .text-gradient {
+            background: var(--brand-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .bg-gradient-brand {
+            background: var(--brand-gradient);
+        }
+
+        .card-main {
+            background: #ffffff;
+            border-radius: 2.5rem;
+            box-shadow: 0 20px 50px -12px rgba(0, 0, 0, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .btn-brand {
+            background: var(--brand-gradient);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-brand:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px -8px rgba(0, 174, 239, 0.5);
+        }
+
+        .input-field {
+            background: #f8fafc;
+            border: 2px solid #f1f5f9;
+            transition: all 0.2s ease;
+        }
+
+        .input-field:focus {
+            background: #ffffff;
+            border-color: #00AEEF;
+            outline: none;
+        }
+
+        .peer:checked + div {
+            border-color: #00AEEF;
+            background-color: #f0f9ff;
+            color: #00AEEF;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-fade-in { animation: fadeIn 0.4s ease forwards; }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .animate-shake { animation: shake 0.2s ease-in-out 0s 2; }
+    </style>
+</head>
+<body class="p-4 md:p-10 min-h-screen">
+
+    <div class="max-w-6xl mx-auto">
+        <!-- Header Section -->
+        <header class="text-center mb-10">
+            <div class="flex justify-center mb-6">
+                <div class="relative w-20 h-20 flex items-center justify-center bg-white rounded-3xl shadow-xl overflow-hidden border-2 border-white">
+                    <div class="absolute inset-0 opacity-20" style="background: linear-gradient(45deg, #00AEEF, #8CC63F)"></div>
+                    <svg class="w-12 h-12 relative z-10 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z" fill="#00AEEF" fill-opacity="0.2" stroke="#00AEEF"/>
+                        <path d="M12 22a7 7 0 0 0 7-7c0-2-1-3.9-3-5l-4-4-4 4c-2 1.1-3 3-3 5a7 7 0 0 0 7 7z" stroke="#8CC63F"/>
+                    </svg>
+                </div>
+            </div>
+            
+            <h1 class="text-4xl font-black tracking-tight uppercase">
+                <span class="text-gradient">PT TIRTA WALUYA</span>
+            </h1>
+            <p class="text-slate-400 font-bold mt-2 tracking-[0.3em] uppercase text-[10px]">Presensi Digital Staff</p>
+        </header>
+
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+            <!-- Form Side -->
+            <div class="lg:col-span-5">
+                <div class="card-main p-8 md:p-10 sticky top-8">
+                    <div class="flex items-center gap-3 mb-8">
+                        <div class="w-2 h-8 bg-green-500 rounded-full"></div>
+                        <h2 class="text-xl font-black text-slate-800 uppercase">Input Presensi</h2>
+                    </div>
+
+                    <form id="presenceForm" class="space-y-6">
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Nama Staff</label>
+                            <input type="text" id="staffName" required class="w-full px-6 py-4 rounded-2xl input-field font-bold text-slate-700" placeholder="Ketik nama lengkap...">
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Angkatan</label>
+                                <select id="generation" class="w-full px-5 py-4 rounded-2xl input-field font-bold text-slate-600 appearance-none">
+                                    <option value="60">60</option>
+                                    <option value="61">61</option>
+                                    <option value="62">62</option>
+                                </select>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Piket</label>
+                                <select id="shift" class="w-full px-5 py-4 rounded-2xl input-field font-bold text-slate-600">
+                                    <option value="Pagi">Pagi</option>
+                                    <option value="Sore">Sore</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="space-y-2">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Unggah Foto Bukti (Max 2)</label>
+                            <input type="file" id="cameraInput" accept="image/*" capture="environment" class="hidden">
+                            <input type="file" id="folderInput" accept="image/*" class="hidden">
+
+                            <div class="grid grid-cols-2 gap-3">
+                                <button type="button" onclick="document.getElementById('cameraInput').click()" class="flex flex-col items-center justify-center gap-2 p-4 border-2 border-dashed border-slate-200 rounded-3xl hover:border-blue-400 hover:bg-blue-50 transition-all text-slate-400 group">
+                                    <svg class="w-6 h-6 group-hover:text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" stroke-width="2.5"/></svg>
+                                    <span class="text-[9px] font-black uppercase tracking-wider">Ambil Kamera</span>
+                                </button>
+                                <button type="button" onclick="document.getElementById('folderInput').click()" class="flex flex-col items-center justify-center gap-2 p-4 border-2 border-dashed border-slate-200 rounded-3xl hover:border-green-400 hover:bg-green-50 transition-all text-slate-400 group">
+                                    <svg class="w-6 h-6 group-hover:text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" stroke-width="2.5"/></svg>
+                                    <span class="text-[9px] font-black uppercase tracking-wider">Unggah Folder</span>
+                                </button>
+                            </div>
+                            <div id="photoPreviewContainer" class="grid grid-cols-2 gap-3 mt-3 hidden"></div>
+                        </div>
+
+                        <div class="space-y-3">
+                            <label class="block text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Status Kehadiran</label>
+                            <div class="grid grid-cols-2 gap-2">
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="presenceStatus" value="Hadir" checked class="peer sr-only">
+                                    <div class="py-3 text-center rounded-xl border-2 border-slate-100 font-black text-[10px] transition-all uppercase tracking-widest peer-checked:border-blue-400 peer-checked:bg-blue-50 peer-checked:text-blue-500">Hadir</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="presenceStatus" value="Izin" class="peer sr-only">
+                                    <div class="py-3 text-center rounded-xl border-2 border-slate-100 font-black text-[10px] transition-all uppercase tracking-widest peer-checked:border-yellow-400 peer-checked:bg-yellow-50 peer-checked:text-yellow-600">Izin</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="presenceStatus" value="Sakit" class="peer sr-only">
+                                    <div class="py-3 text-center rounded-xl border-2 border-slate-100 font-black text-[10px] transition-all uppercase tracking-widest peer-checked:border-green-400 peer-checked:bg-green-50 peer-checked:text-green-600">Sakit</div>
+                                </label>
+                                <label class="cursor-pointer">
+                                    <input type="radio" name="presenceStatus" value="Alfa" class="peer sr-only">
+                                    <div class="py-3 text-center rounded-xl border-2 border-slate-100 font-black text-[10px] transition-all uppercase tracking-widest peer-checked:border-red-400 peer-checked:bg-red-50 peer-checked:text-red-600">Alfa</div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <button type="submit" id="submitBtn" class="btn-brand w-full text-white py-5 rounded-2xl font-black uppercase tracking-[0.2em] text-[11px] shadow-lg flex items-center justify-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7" stroke-width="4"/></svg>
+                            Simpan Absen
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Data Side -->
+            <div class="lg:col-span-7 space-y-8">
+                <!-- Aktivitas Hari Ini -->
+                <div class="card-main p-8 overflow-hidden">
+                    <div class="flex justify-between items-start mb-6">
+                        <div>
+                            <h2 class="text-lg font-black text-slate-800 uppercase">Aktivitas Hari Ini</h2>
+                            <p id="currentDateDisplay" class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Memuat tanggal...</p>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                            <span class="text-[9px] font-black text-slate-400 uppercase tracking-widest">Live Update</span>
+                        </div>
+                    </div>
+                    <div id="logTable" class="space-y-3 max-h-[500px] overflow-y-auto pr-2"></div>
+                </div>
+
+                <!-- Laporan & Rekapitulasi -->
+                <div class="card-main p-8 md:p-10">
+                    <div class="flex justify-between items-center mb-8">
+                        <div>
+                            <h2 class="text-2xl font-black text-slate-800 uppercase tracking-tight">Laporan & Rekapitulasi</h2>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">Akumulasi Seluruh Data</p>
+                        </div>
+                        <button onclick="window.handleAdminToggle()" id="adminBtn" class="px-5 py-3 rounded-xl bg-slate-800 text-white text-[9px] font-black uppercase tracking-widest hover:bg-slate-700 transition-all">Panel Admin</button>
+                    </div>
+
+                    <div id="adminArea" class="hidden space-y-8">
+                        <!-- Admin Actions -->
+                        <div class="flex flex-wrap gap-3">
+                            <button onclick="window.exportToCSV()" class="flex-1 py-4 bg-green-500 hover:bg-green-600 text-white rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-lg flex items-center justify-center gap-2 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" stroke-width="2.5"/></svg>
+                                Ekspor Laporan (CSV)
+                            </button>
+                            <button onclick="window.showResetConfirm()" class="py-4 px-6 bg-red-100 hover:bg-red-200 text-red-600 rounded-2xl font-black uppercase tracking-widest text-[10px] flex items-center justify-center gap-2 transition-all">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" stroke-width="2"/></svg>
+                                Reset DB
+                            </button>
+                        </div>
+
+                        <div class="bg-slate-50 rounded-3xl border border-slate-100 overflow-hidden">
+                            <table class="min-w-full">
+                                <thead>
+                                    <tr class="text-[9px] font-black text-slate-400 uppercase tracking-widest border-b border-white">
+                                        <th class="px-6 py-4 text-left">Nama & Piket</th>
+                                        <th class="px-4 py-4 text-center text-blue-500">H</th>
+                                        <th class="px-4 py-4 text-center text-yellow-500">I</th>
+                                        <th class="px-4 py-4 text-center text-green-500">S</th>
+                                        <th class="px-4 py-4 text-center text-red-500">A</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recapTable" class="divide-y divide-white"></tbody>
+                            </table>
+                        </div>
+
+                        <!-- Tanda Tangan Admin -->
+                        <div class="pt-10 text-center space-y-6">
+                            <div class="space-y-1">
+                                <p id="footerLocationDate" class="text-[9px] font-bold text-slate-400 uppercase tracking-widest"></p>
+                                <p class="text-[11px] font-black text-slate-800 uppercase tracking-tight">Chief Executive Officer</p>
+                            </div>
+                            <div class="relative inline-block">
+                                <div class="w-48 h-px bg-slate-200 mx-auto mt-16 mb-2"></div>
+                                <div class="bg-green-50 text-green-500 text-[8px] font-black px-3 py-1 rounded-full uppercase tracking-widest inline-block border border-green-100">Digitally Signed & Secured</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="adminLocked" class="py-20 text-center">
+                        <div class="w-16 h-16 bg-slate-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-slate-100 shadow-sm text-slate-300">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2"/></svg>
+                        </div>
+                        <p class="text-[10px] font-black text-slate-300 uppercase tracking-[0.4em]">Panel Terkunci</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PIN Modal -->
+    <div id="pinModal" class="fixed inset-0 bg-slate-900/80 backdrop-blur-md hidden flex items-center justify-center z-50 p-6">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-xs w-full shadow-2xl animate-fade-in">
+            <h3 class="text-xl font-black text-slate-800 text-center mb-6 uppercase">Akses Admin</h3>
+            <input type="password" id="pinInput" class="w-full bg-slate-50 border-2 border-slate-100 py-4 rounded-2xl text-center text-3xl font-black mb-6 outline-none focus:border-blue-400" placeholder="****" maxlength="4">
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="window.verifyPin()" class="py-4 btn-brand text-white font-black rounded-xl uppercase text-[10px]">Masuk</button>
+                <button onclick="window.closePin()" class="py-4 bg-slate-100 text-slate-400 font-black rounded-xl uppercase text-[10px]">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Reset Confirm Modal -->
+    <div id="resetModal" class="fixed inset-0 bg-red-900/90 backdrop-blur-md hidden flex items-center justify-center z-[60] p-6">
+        <div class="bg-white rounded-[2.5rem] p-10 max-w-sm w-full shadow-2xl animate-fade-in">
+            <div class="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" stroke-width="2"/></svg>
+            </div>
+            <h3 class="text-lg font-black text-slate-800 text-center mb-2 uppercase">Hapus Database?</h3>
+            <p class="text-[10px] text-slate-400 font-bold text-center mb-8 uppercase tracking-widest leading-relaxed">Tindakan ini permanen. Ketik <span class="text-red-500">HAPUS</span> di bawah untuk mengonfirmasi.</p>
+            <input type="text" id="resetConfirmInput" class="w-full bg-slate-50 border-2 border-slate-100 py-4 rounded-2xl text-center font-black mb-6 outline-none focus:border-red-400 uppercase" placeholder="...">
+            <div class="grid grid-cols-2 gap-3">
+                <button onclick="window.executeReset()" class="py-4 bg-red-500 text-white font-black rounded-xl uppercase text-[10px]">Ya, Hapus</button>
+                <button onclick="window.hideResetConfirm()" class="py-4 bg-slate-100 text-slate-400 font-black rounded-xl uppercase text-[10px]">Batal</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getFirestore, collection, addDoc, onSnapshot, getDocs, deleteDoc, doc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        const firebaseConfig = JSON.parse(__firebase_config);
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+        const auth = getAuth(app);
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'tirta-waluya-v10';
+
+        let user = null;
+        let photos = [];
+        let allData = [];
+
+        // Auth
+        const initAuth = async () => {
+            if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                await signInWithCustomToken(auth, __initial_auth_token);
+            } else {
+                await signInAnonymously(auth);
+            }
+        };
+        initAuth();
+
+        onAuthStateChanged(auth, u => {
+            if(u) { user = u; startDataListener(); }
+        });
+
+        function startDataListener() {
+            if (!user) return;
+            const q = collection(db, 'artifacts', appId, 'public', 'data', 'presensi');
+            onSnapshot(q, (snap) => {
+                allData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                renderUI();
+            }, (err) => console.error("Snapshot error:", err));
+        }
+
+        // Image Processing
+        const handleFile = (file) => {
+            if (!file || photos.length >= 2) return;
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const img = new Image();
+                img.onload = () => {
+                    const canvas = document.createElement('canvas');
+                    const ctx = canvas.getContext('2d');
+                    const max = 600;
+                    let w = img.width, h = img.height;
+                    if (w > h) { if (w > max) { h *= max/w; w = max; } } else { if (h > max) { w *= max/h; h = max; } }
+                    canvas.width = w; canvas.height = h;
+                    ctx.drawImage(img, 0, 0, w, h);
+                    photos.push(canvas.toDataURL('image/jpeg', 0.6));
+                    renderPhotoPreviews();
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        };
+
+        const renderPhotoPreviews = () => {
+            const container = document.getElementById('photoPreviewContainer');
+            if (photos.length > 0) {
+                container.classList.remove('hidden');
+                container.innerHTML = photos.map((src, idx) => `
+                    <div class="relative group animate-fade-in">
+                        <img src="${src}" class="w-full h-32 object-cover rounded-2xl border-4 border-white shadow-md">
+                        <button type="button" onclick="window.removePhoto(${idx})" class="absolute -top-2 -right-2 bg-red-500 text-white p-1 rounded-full shadow-lg">
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M6 18L18 6M6 6l12 12" stroke-width="4"/></svg>
+                        </button>
+                    </div>
+                `).join('');
+            } else { container.classList.add('hidden'); }
+        };
+
+        window.removePhoto = (idx) => { photos.splice(idx, 1); renderPhotoPreviews(); };
+        document.getElementById('cameraInput').addEventListener('change', e => handleFile(e.target.files[0]));
+        document.getElementById('folderInput').addEventListener('change', e => handleFile(e.target.files[0]));
+
+        // Submission
+        document.getElementById('presenceForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if (!user) return;
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true; btn.innerText = "MENYIMPAN...";
+
+            try {
+                const now = new Date();
+                await addDoc(collection(db, 'artifacts', appId, 'public', 'data', 'presensi'), {
+                    name: document.getElementById('staffName').value.trim(),
+                    generation: document.getElementById('generation').value,
+                    shift: document.getElementById('shift').value,
+                    status: document.querySelector('input[name="presenceStatus"]:checked').value,
+                    photos: photos,
+                    timestamp: now.toISOString(),
+                    timeLabel: now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
+                    dateLabel: now.toLocaleDateString('en-CA')
+                });
+                e.target.reset(); photos = []; renderPhotoPreviews();
+                btn.innerHTML = "BERHASIL!";
+                setTimeout(() => { btn.disabled = false; btn.innerHTML = "Simpan Absen"; }, 2000);
+            } catch (err) { btn.disabled = false; btn.innerHTML = "Gagal!"; }
+        });
+
+        // UI Rendering
+        function renderUI() {
+            const todayLabel = new Date().toLocaleDateString('en-CA');
+            const logTable = document.getElementById('logTable');
+            const recapTable = document.getElementById('recapTable');
+
+            const filteredToday = allData.filter(d => d.dateLabel === todayLabel)
+                                        .sort((a,b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            logTable.innerHTML = filteredToday.length ? filteredToday.map(d => {
+                const statusColors = { Hadir: 'blue', Izin: 'yellow', Sakit: 'green', Alfa: 'red' };
+                const color = statusColors[d.status];
+                return `
+                    <div class="flex items-center justify-between p-4 bg-white border border-slate-50 rounded-2xl shadow-sm animate-fade-in">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center font-black text-white text-[10px]">${d.name[0]}</div>
+                            <div>
+                                <div class="flex items-center gap-2">
+                                    <p class="text-[11px] font-black text-slate-700 uppercase leading-none">${d.name}</p>
+                                    <span class="text-[8px] font-bold text-blue-500 bg-blue-50 px-1.5 py-0.5 rounded-md uppercase">${d.timeLabel}</span>
+                                </div>
+                                <p class="text-[8px] font-bold text-slate-400 uppercase mt-1">PIKET ${d.shift} • ANGKATAN ${d.generation}</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2">
+                            <div class="flex -space-x-3">
+                                ${(d.photos || []).map(p => `<img src="${p}" class="w-8 h-8 rounded-lg object-cover border-2 border-white shadow-sm">`).join('')}
+                            </div>
+                            <span class="px-3 py-1 rounded-lg bg-${color}-50 text-${color}-500 text-[8px] font-black uppercase tracking-widest">${d.status}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('') : `<p class="py-10 text-center text-slate-300 uppercase text-[9px] font-black tracking-widest">Belum ada absensi hari ini</p>`;
+
+            const stats = {};
+            allData.forEach(d => {
+                const key = `${d.name} (${d.shift})`;
+                if(!stats[key]) stats[key] = { name: d.name, shift: d.shift, h:0, i:0, s:0, a:0 };
+                const s = d.status[0].toLowerCase();
+                if(stats[key][s] !== undefined) stats[key][s]++;
+            });
+
+            recapTable.innerHTML = Object.values(stats).length ? Object.values(stats).map(s => `
+                <tr class="text-[10px] font-black text-slate-600 uppercase">
+                    <td class="px-6 py-4">
+                        <div class="flex flex-col">
+                            <span>${s.name}</span>
+                            <span class="text-[7px] text-slate-400 font-bold tracking-widest">PIKET ${s.shift}</span>
+                        </div>
+                    </td>
+                    <td class="px-4 py-4 text-center text-blue-500 font-black">${s.h}</td>
+                    <td class="px-4 py-4 text-center text-yellow-500 font-black">${s.i}</td>
+                    <td class="px-4 py-4 text-center text-green-500 font-black">${s.s}</td>
+                    <td class="px-4 py-4 text-center text-red-500 font-black">${s.a}</td>
+                </tr>
+            `).join('') : `<tr><td colspan="5" class="py-10 text-center text-slate-300 uppercase text-[9px] font-black">Data rekap kosong</td></tr>`;
+        }
+
+        // Export CSV
+        window.exportToCSV = () => {
+            if (!allData.length) return;
+            const headers = ["Nama", "Angkatan", "Piket", "Status", "Tanggal", "Jam"];
+            const rows = allData.map(d => [
+                d.name, d.generation, d.shift, d.status, d.dateLabel, d.timeLabel
+            ]);
+            
+            const csvContent = [headers, ...rows].map(e => e.join(",")).join("\n");
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            const url = URL.createObjectURL(blob);
+            link.setAttribute("href", url);
+            link.setAttribute("download", `Laporan_Presensi_TirtaWaluya_${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        };
+
+        // Reset Database Logic
+        window.showResetConfirm = () => document.getElementById('resetModal').classList.remove('hidden');
+        window.hideResetConfirm = () => {
+            document.getElementById('resetModal').classList.add('hidden');
+            document.getElementById('resetConfirmInput').value = "";
+        };
+
+        window.executeReset = async () => {
+            const input = document.getElementById('resetConfirmInput');
+            if (input.value.toUpperCase() !== "HAPUS") {
+                input.classList.add('animate-shake', 'border-red-500');
+                setTimeout(() => input.classList.remove('animate-shake', 'border-red-500'), 500);
+                return;
+            }
+
+            const confirmBtn = event.target;
+            confirmBtn.disabled = true; confirmBtn.innerText = "MENGHAPUS...";
+
+            try {
+                const q = collection(db, 'artifacts', appId, 'public', 'data', 'presensi');
+                const snap = await getDocs(q);
+                const batch = [];
+                snap.forEach(d => batch.push(deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'presensi', d.id))));
+                await Promise.all(batch);
+                window.hideResetConfirm();
+            } catch (err) {
+                console.error(err);
+                confirmBtn.innerText = "Error!";
+            } finally {
+                confirmBtn.disabled = false; confirmBtn.innerText = "Ya, Hapus";
+            }
+        };
+
+        // Admin Auth Global Functions
+        window.handleAdminToggle = () => {
+            const area = document.getElementById('adminArea');
+            if (area.classList.contains('hidden')) {
+                document.getElementById('pinModal').classList.remove('hidden');
+            } else {
+                area.classList.add('hidden');
+                document.getElementById('adminLocked').classList.remove('hidden');
+                document.getElementById('adminBtn').innerText = "Panel Admin";
+            }
+        };
+
+        window.closePin = () => {
+            document.getElementById('pinModal').classList.add('hidden');
+            document.getElementById('pinInput').value = "";
+        };
+
+        window.verifyPin = () => {
+            const pin = document.getElementById('pinInput');
+            if(pin.value === "1234") {
+                document.getElementById('adminArea').classList.remove('hidden');
+                document.getElementById('adminLocked').classList.add('hidden');
+                document.getElementById('adminBtn').innerText = "Kunci Panel";
+                window.closePin();
+            } else {
+                pin.classList.add('border-red-500', 'animate-shake');
+                setTimeout(() => pin.classList.remove('border-red-500', 'animate-shake'), 500);
+            }
+        };
+
+        // Setup Date
+        const getIndonesianDate = () => {
+            const date = new Date();
+            const days = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
+            const months = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+            return {
+                full: `${days[date.getDay()]}, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`,
+                footer: `SUKABUMI, ${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}`
+            };
+        };
+        const dateInfo = getIndonesianDate();
+        document.getElementById('currentDateDisplay').innerText = dateInfo.full;
+        document.getElementById('footerLocationDate').innerText = dateInfo.footer;
+    </script>
+</body>
+</html>
